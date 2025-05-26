@@ -3,7 +3,7 @@ use std::fs::read_dir;
 use std::io;
 use std::path::{Path, PathBuf};
 
-use log::trace;
+use log::{error, trace};
 
 #[derive(Debug)]
 pub struct Files {
@@ -41,9 +41,8 @@ impl Iterator for Files {
 
         trace!("Next directory: {:?}", &directory);
 
-        let nodes = match read_dir(&directory) {
-            Ok(f) => f,
-            Err(e) => return Some(Err(e)),
+        let Ok(nodes) = read_dir(&directory).inspect_err(|error| error!("{error}")) else {
+            return self.next();
         };
 
         for node in nodes.filter_map(Result::ok).map(|entry| entry.path()) {
