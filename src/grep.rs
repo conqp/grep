@@ -1,12 +1,13 @@
-use crate::args::Args;
-use crate::files::Files;
+use std::fs::OpenOptions;
+use std::io::{self, BufReader};
+use std::path::{Path, PathBuf};
+
 use lines_lossy::LinesLossyExt;
 use log::error;
 use regex::Regex;
-use std::fs::OpenOptions;
-use std::io;
-use std::io::BufReader;
-use std::path::{Path, PathBuf};
+
+use crate::args::Args;
+use crate::files::Files;
 
 #[derive(Clone, Debug)]
 pub struct Grep {
