@@ -2,30 +2,24 @@ use std::fs::OpenOptions;
 use std::io::{self, BufReader};
 use std::path::{Path, PathBuf};
 
+use clap::Parser;
 use lines_lossy::LinesLossyExt;
 use log::error;
 use regex::Regex;
 
-use crate::args::Args;
 use crate::files::Files;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Parser)]
 pub struct Grep {
+    #[clap(index = 1)]
     pattern: Regex,
+    #[clap(index = 2, default_value = "./")]
     path: PathBuf,
+    #[clap(short, long)]
     recursive: bool,
 }
 
 impl Grep {
-    #[must_use]
-    pub const fn new(pattern: Regex, path: PathBuf, recursive: bool) -> Self {
-        Self {
-            pattern,
-            path,
-            recursive,
-        }
-    }
-
     pub fn run(&self) -> io::Result<()> {
         if self.recursive {
             for path in Files::new(&self.path)
@@ -57,11 +51,5 @@ impl Grep {
             });
 
         Ok(())
-    }
-}
-
-impl From<Args> for Grep {
-    fn from(args: Args) -> Self {
-        Self::new(args.pattern, args.path, args.recursive)
     }
 }
