@@ -1,25 +1,27 @@
 use std::collections::BTreeSet;
 use std::fs::read_dir;
 use std::io;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use log::trace;
 
+#[derive(Debug)]
 pub struct Files {
     files: BTreeSet<PathBuf>,
     directories: BTreeSet<PathBuf>,
 }
 
 impl Files {
-    pub fn new(path: PathBuf) -> Self {
+    #[must_use]
+    pub fn new(path: &Path) -> Self {
         if path.is_dir() {
             Self {
                 files: BTreeSet::new(),
-                directories: BTreeSet::from([path]),
+                directories: BTreeSet::from([path.into()]),
             }
         } else {
             Self {
-                files: BTreeSet::from([path]),
+                files: BTreeSet::from([path.into()]),
                 directories: BTreeSet::new(),
             }
         }

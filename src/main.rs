@@ -1,11 +1,13 @@
 use clap::Parser;
 
 use args::Args;
+use grep::Grep;
 
 mod args;
 mod files;
+mod grep;
 
 fn main() -> std::io::Result<()> {
     env_logger::init();
-    Args::parse().run()
+    Grep::from(Args::parse()).run()
 }
