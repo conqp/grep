@@ -38,7 +38,6 @@ impl Iterator for Files {
         }
 
         let directory = self.directories.pop_first()?;
-
         trace!("Next directory: {:?}", &directory);
 
         let Ok(nodes) = read_dir(&directory).inspect_err(|error| error!("{error}")) else {
