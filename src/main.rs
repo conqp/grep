@@ -10,5 +10,5 @@ fn main() {
     env_logger::init();
     Grep::parse()
         .run()
-        .for_each(|matched_line| println!("{matched_line}"));
+        .for_each(|matching_line| println!("{matching_line}"));
 }
