@@ -38,7 +38,7 @@ impl Display for MatchingLine {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Line\t#{} in {:?}:\t{}",
+            "Line #{} in {:?}:\t{}",
             self.line(),
             self.filename(),
             self.text()
