@@ -1,5 +1,6 @@
 use std::fs::OpenOptions;
-use std::io::{self, BufReader, Error};
+use std::io::{self, BufReader};
+use std::iter::once;
 use std::path::{Path, PathBuf};
 
 use clap::Parser;
@@ -22,21 +23,22 @@ pub struct Grep {
 impl Grep {
     pub fn run(&self) -> io::Result<()> {
         if self.recursive {
-            self.grep_recursive()
+            if let Some(files) = Files::new(&self.path) {
+                self.grep_recursive(files)
+            } else {
+                self.grep_recursive(once(Ok(self.path.clone())))
+            }
         } else {
             self.grep(&self.path)
         }
     }
 
-    fn grep_recursive(&self) -> io::Result<()> {
-        for path in Files::new(&self.path)
-            .ok_or(Error::other("Specified path is not a directory."))?
-            .filter_map(|path| path.inspect_err(|error| error!("{error}")).ok())
-        {
-            match self.grep(&path) {
+    fn grep_recursive(&self, files: impl Iterator<Item = io::Result<PathBuf>>) -> io::Result<()> {
+        for file in files.filter_map(|path| path.inspect_err(|error| error!("{error}")).ok()) {
+            match self.grep(&file) {
                 Ok(()) => (),
                 Err(error) => {
-                    error!("{path:?}: {error}");
+                    error!("{file:?}: {error}");
                 }
             }
         }
