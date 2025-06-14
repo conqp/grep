@@ -1,5 +1,5 @@
 use std::fs::OpenOptions;
-use std::io::{self, BufReader};
+use std::io::{self, BufReader, Error};
 use std::path::{Path, PathBuf};
 
 use clap::Parser;
@@ -30,6 +30,7 @@ impl Grep {
 
     fn grep_recursive(&self) -> io::Result<()> {
         for path in Files::new(&self.path)
+            .ok_or(Error::other("Specified path is not a directory."))?
             .filter_map(|path| path.inspect_err(|error| error!("{error}")).ok())
         {
             match self.grep(&path) {

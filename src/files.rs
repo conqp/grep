@@ -12,18 +12,28 @@ pub struct Files {
 }
 
 impl Files {
+    /// Attempt to create a new files iterator from a path.
+    ///
+    /// # Returns
+    ///
+    /// Returns `Some(Files)` if `path` is a valid directory, else `None`.
     #[must_use]
-    pub fn new(path: &Path) -> Self {
+    pub fn new(path: &Path) -> Option<Self> {
         if path.is_dir() {
-            Self {
-                files: BTreeSet::new(),
-                directories: BTreeSet::from([path.into()]),
-            }
+            Some(unsafe { Self::new_unchecked(path) })
         } else {
-            Self {
-                files: BTreeSet::from([path.into()]),
-                directories: BTreeSet::new(),
-            }
+            None
+        }
+    }
+
+    /// Crates a new files iterator from a path to a directory.
+    ///
+    /// The caller must guarantee, that `path` is a directory.
+    #[must_use]
+    pub unsafe fn new_unchecked(path: &Path) -> Self {
+        Self {
+            files: BTreeSet::new(),
+            directories: BTreeSet::from([path.into()]),
         }
     }
 }
