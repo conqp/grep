@@ -22,21 +22,25 @@ pub struct Grep {
 impl Grep {
     pub fn run(&self) -> io::Result<()> {
         if self.recursive {
-            for path in Files::new(&self.path)
-                .filter_map(|path| path.inspect_err(|error| error!("{error}")).ok())
-            {
-                match self.grep(&path) {
-                    Ok(()) => (),
-                    Err(error) => {
-                        error!("{path:?}: {error}");
-                    }
-                }
-            }
-
-            Ok(())
+            self.grep_recursive()
         } else {
             self.grep(&self.path)
         }
+    }
+
+    fn grep_recursive(&self) -> io::Result<()> {
+        for path in Files::new(&self.path)
+            .filter_map(|path| path.inspect_err(|error| error!("{error}")).ok())
+        {
+            match self.grep(&path) {
+                Ok(()) => (),
+                Err(error) => {
+                    error!("{path:?}: {error}");
+                }
+            }
+        }
+
+        Ok(())
     }
 
     fn grep(&self, path: &Path) -> io::Result<()> {
