@@ -20,6 +20,7 @@ impl Files {
     #[must_use]
     pub fn new(path: &Path) -> Option<Self> {
         if path.is_dir() {
+            // SAFETY: We just confirmed, that `path` is a directory.
             Some(unsafe { Self::new_unchecked(path) })
         } else {
             None
