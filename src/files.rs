@@ -29,6 +29,8 @@ impl Files {
 
     /// Crates a new files iterator from a path to a directory.
     ///
+    /// # Safety
+    ///
     /// The caller must guarantee, that `path` is a directory.
     #[must_use]
     pub unsafe fn new_unchecked(directory: &Path) -> Self {
