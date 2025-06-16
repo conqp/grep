@@ -31,7 +31,7 @@ impl Files {
     ///
     /// # Safety
     ///
-    /// The caller must guarantee, that `path` is a directory.
+    /// The caller must guarantee, that `directory` is a directory.
     #[must_use]
     pub unsafe fn new_unchecked(directory: &Path) -> Self {
         Self {
