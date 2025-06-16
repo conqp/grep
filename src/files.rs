@@ -30,10 +30,10 @@ impl Files {
     ///
     /// The caller must guarantee, that `path` is a directory.
     #[must_use]
-    pub unsafe fn new_unchecked(path: &Path) -> Self {
+    pub unsafe fn new_unchecked(directory: &Path) -> Self {
         Self {
             files: BTreeSet::new(),
-            directories: BTreeSet::from([path.into()]),
+            directories: BTreeSet::from([directory.into()]),
         }
     }
 }
